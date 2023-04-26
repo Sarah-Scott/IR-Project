@@ -16,9 +16,13 @@ wait = WebDriverWait(driver, 30)
 driver.get('https://www.twitter.com/explore')
 sleep(60)
 
-# Search for KU-related tweets over the last few years
+# Search for tweets about Beyonce around the following dates
+# diamond: 2021-08-25
+# superbowl: 2016-02-07
+# lemonade: 2016-04-23
+# renaissance: 2022-07-29
 searchBox = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, 'input[aria-label="Search query"]')))
-searchBox.send_keys('(Jayhawks OR "University of Kansas" OR #RockChalk OR #KUbball OR #KUFootball) until:2023-02-18')
+searchBox.send_keys('Beyonce until:2021-08-26')
 searchBox.send_keys(Keys.RETURN)
 sleep(5)
 
@@ -70,7 +74,7 @@ while noNewTweets < 3:
   
 
 # Put results into .csv file
-with open('tweetsFeb.csv','w', newline='') as csvfile:
+with open('tweets.csv','w', newline='') as csvfile:
   tweetWriter = csv.writer(csvfile, delimiter=' ')
   for ct in collectedTweets:
     tweetWriter.writerow(ct)

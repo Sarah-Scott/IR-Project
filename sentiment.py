@@ -80,16 +80,54 @@ def trainClassifier(train_data):
 
 
 
+   
 dataset = getDataset()
 train_data = dataset[:7000]
 test_data = dataset[7000:]
 myClassifier = trainClassifier(train_data)
 print("Testing Accuracy:", classify.accuracy(myClassifier, test_data))
-  
-print(myClassifier.show_most_informative_features(10))
 
 
-#file = open("tweets.csv", "r")
-#tweets = list(csv.reader(file, delimiter=' '))
-#file.close()
+
+def analyzeTweets(tweetFilename,sentimentFilename):
+   
+   file = open(tweetFilename, "r")
+   bey_tweets = list(csv.reader(file, delimiter=' '))
+   file.close()
+
+   bey_tokens = []
+   bey_dates = []
+   for t in bey_tweets:
+      bey_tokens.append(t[0].split())
+      bey_dates.append(t[1])
+
+   bey_tokens_list = makeTokensList(bey_tokens)
+   bey_tokens_dict = genTokenDict(bey_tokens_list)
+   output_list = [] #format: [[tweet,date,sentiment],...]
+   numPos = 0
+   numNeg = 0 
+
+   count = 0
+   for tok_dict in bey_tokens_dict:
+      temp = []
+      sentiment = myClassifier.classify(tok_dict)
+      temp.append(bey_tokens[count])
+      temp.append(bey_dates[count])
+      temp.append(sentiment)
+    
+      if (sentiment == 'Pos'):
+        numPos += 1
+      else:
+        numNeg += 1
+    
+   output_list.append(temp)
+   count += 1
+
+   print("Number of positive tweets:", str(numPos))
+   print("Number of negative tweets", str(numNeg))
+
+   with open(sentimentFilename, "w", newline="") as csvfile:
+      writer = csv.writer(csvfile, delimiter=' ')
+      for x in output_list:
+        writer.writerow(x)
 
